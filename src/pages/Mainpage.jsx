@@ -3,6 +3,7 @@ import axios from "axios";
 import Dropdown from "../components/DropDown";
 import Leaderboard from "../components/LeaderBoard";
 const api_key = import.meta.env.VITE_BACKEND_URL;
+import toast from "react-hot-toast";
 
 function Mainpage() {
   const [users, setUsers] = useState([]);
@@ -41,13 +42,14 @@ function Mainpage() {
     try {
       const res = await axios.post(`${api_key}/api/v1/user/register`, input);
       if (res.data.success) {
-        alert("User registered successfully!");
+        toast.success(`user added`);
         setInput({ name: "", email: "" });
         setPopOver(false);
         fetchUsers();
         fetchLeaderboard();
       }
     } catch (error) {
+        toast.error("user already exists")
       console.error("Error registering user:", error);
     }
   };
@@ -58,7 +60,7 @@ function Mainpage() {
         
         const res = await axios.post(`${api_key}/api/v1/user/claimPoint/${selectedUser._id}`,{});
         if (res.data.success) {
-          alert("Points claimed successfully!");
+            toast.success(`congrats you got ${res.data.points} points`);
           fetchLeaderboard();
         }
       } catch (error) {
